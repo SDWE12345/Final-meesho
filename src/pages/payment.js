@@ -141,7 +141,7 @@ const Payments = () => {
                 break;
             case 3:
                 setPayment(
-                    `phonepe://pay?pa=${upiId}&pn=KHODIYAR%20ENTERPRISE&mc=&tn=Verified%20Merchant&am=${amount}&cu=INR&url=&mode=02&orgid=159012&mid=&msid=&mtid=&sign=MEQCIB4NcyZl2FEuktegagtryRG1iA1XG9r3tMHCIGZmR0wQAiBPvbuBFfhZjmq3MKMKH/XouOPk2+STl/VwYQTg2Y7vWg==`
+                    `${redirect_url}`
                 );
                 break;
             case 5:
