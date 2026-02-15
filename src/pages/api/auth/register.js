@@ -3,9 +3,9 @@ import connectToDatabase from '../../../utils/mongodb';
 import User from '../../../models/User';
 import { generateToken } from '../../../utils/auth';
 
-connectToDatabase();
 
 export default async function handler(req, res) {
+  await connectToDatabase();
   if (req.method !== 'POST') {
     return res.status(405).json({
       success: false,

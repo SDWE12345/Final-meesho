@@ -34,30 +34,6 @@ function Cart() {
     0
   );
 
-  useEffect(() => {
-    fetchProducts1();
-  }, []);
-
-  const fetchProducts1 = async () => {
-    try {
-      const response = await fetch("/api/upichange", {
-        method: "GET",
-        headers: {
-          Accept: "*/*",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("upi", data.upi.upi);
-        setProducts1(data.pixelId);
-      }
-    } catch (error) {
-      console.error("Failed to fetch UPI config:", error);
-    }
-  };
 
   const removeItem = (id) => {
     const updated = JSON.parse(localStorage.getItem("d1") || "[]").filter(

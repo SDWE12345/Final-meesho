@@ -71,7 +71,7 @@ function Home() {
       }
 
       const response = await fetch(
-        `/api/products?page=${pageNum}&limit=35&search=`,
+        `/api/products?page=${pageNum}&limit=50&search=`,
         {
           method: 'GET',
           headers,
@@ -121,35 +121,7 @@ function Home() {
     }
   }, [products.length]);
 
-  // Fetch UPI and pixel data
-  const fetchProducts1 = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const headersList = {
-        "Accept": "*/*",
-        "Content-Type": "application/json"
-      };
 
-      if (token) {
-        headersList["Authorization"] = `Bearer ${token}`;
-      }
-
-      const response = await fetch('/api/upichange', {
-        method: 'GET',
-        headers: headersList,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        if (data.upi?.upi) {
-          localStorage.setItem("upi", data.upi.upi);
-        }
-        setProducts1(data.pixelId || { pixelId: "" });
-      }
-    } catch (error) {
-      console.error('Error fetching UPI:', error);
-    }
-  };
 
   // Load more products
   const loadMore = useCallback(() => {
@@ -191,7 +163,6 @@ function Home() {
   // Initial fetch
   useEffect(() => {
     fetchProducts(1, false);
-    fetchProducts1();
   }, []);
 
   // Format time display

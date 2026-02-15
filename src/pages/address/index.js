@@ -6,33 +6,12 @@ import { useEffect, useState } from "react";
 
 const Address = () => {
   const router = useRouter();
-  const [products1, setProducts1] = useState({ pixelId: "" });
   const [locationLoading, setLocationLoading] = useState(false);
   const [locationError, setLocationError] = useState("");
 
   useEffect(() => {
-    fetchProducts1();
   }, []);
 
-  const fetchProducts1 = async () => {
-    try {
-      const response = await fetch("/api/upichange", {
-        method: "GET",
-        headers: {
-          Accept: "*/*",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("upi", data.upi.upi);
-        setProducts1(data.pixelId);
-      }
-    } catch (error) {
-      console.error("Failed to fetch UPI config:", error);
-    }
-  };
 
   const { values, handleChange, handleSubmit, setFieldValue } = useFormik({
     initialValues: {

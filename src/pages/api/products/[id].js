@@ -3,9 +3,10 @@ import connectToDatabase from '../../../utils/mongodb';
 import Product from '../../../models/Product';
 import { requireAdmin } from '../../../utils/auth';
 
-connectToDatabase();
-
 async function handler(req, res) {
+  // ✅ Await database connection
+  await connectToDatabase();
+
   const { method } = req;
   const { id } = req.query;
 

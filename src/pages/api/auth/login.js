@@ -3,8 +3,6 @@ import connectToDatabase from '../../../utils/mongodb';
 import User from '../../../models/User';
 import { generateToken } from '../../../utils/auth';
 
-connectToDatabase();
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({
@@ -14,6 +12,9 @@ export default async function handler(req, res) {
   }
 
   try {
+    // ✅ AWAIT the database connection before proceeding
+    await connectToDatabase();
+
     const { email, password } = req.body;
 
     // Validation

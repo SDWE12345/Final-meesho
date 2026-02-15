@@ -53,7 +53,7 @@ const productSchema = new mongoose.Schema({
   }],
   mainImage: {
     type: String,
-    required: true,
+    default: '',
   },
   category: {
     type: String,
@@ -89,6 +89,12 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: 0,
     index: true,
+  },
+  // ✅ sortOrder is the main field for custom ordering
+  sortOrder: {
+    type: Number,
+    default: 0,
+    index: true, // ✅ Indexed for fast sorting
   },
   isActive: {
     type: Boolean,
@@ -151,6 +157,11 @@ productSchema.virtual('discountPercentage').get(function() {
   return 0;
 });
 
+// ✅ Compound index for common queries
+productSchema.index({ isActive: 1, sortOrder: 1 });
+productSchema.index({ category: 1, sortOrder: 1 });
+productSchema.index({ isFeatured: 1, sortOrder: 1 });
+
 // Index for search
 productSchema.index({ title: 'text', description: 'text', features: 'text' });
 
@@ -170,5 +181,11 @@ productSchema.pre('save', function(next) {
   
   next();
 });
+
+// ✅ Static method to get next sort order
+productSchema.statics.getNextSortOrder = async function() {
+  const lastProduct = await this.findOne().sort({ sortOrder: -1 }).select('sortOrder');
+  return lastProduct ? (lastProduct.sortOrder || 0) + 1 : 0;
+};
 
 export default mongoose.models.Product || mongoose.model('Product', productSchema);

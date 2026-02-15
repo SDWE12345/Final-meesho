@@ -4,8 +4,6 @@ import Product from '../../../models/Product';
 import { requireAdmin } from '../../../utils/auth';
 import { validateProductCSV, formatProductFromCSV } from '../../../utils/csvHelper';
 
-connectToDatabase();
-
 export const config = {
   api: {
     bodyParser: {
@@ -38,6 +36,9 @@ function generateSlug(name, sku) {
  * Bulk upload handler
  */
 async function handler(req, res) {
+  // ✅ Await database connection
+  await connectToDatabase();
+
   if (req.method !== 'POST') {
     return res.status(405).json({
       success: false,
