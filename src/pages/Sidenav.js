@@ -108,7 +108,7 @@ function Sidenav({ mySidenavopen, setmySidenavopen, data133, setdata133 }) {
             <div 
                 id="mySidenav" 
                 className="sidenav" 
-                style={{ right: mySidenavopen ? "0%" : "-100%" }}
+                style={{ right: !mySidenavopen ? "0%" : "-100%" }}
             >
                 {/* Header */}
                 <div className="sidenav-div">
