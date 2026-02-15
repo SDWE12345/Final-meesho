@@ -14,7 +14,7 @@ function MyApp({ Component, pageProps }) {
     const loadFacebookPixel = async () => {
       try {
         const response = await fetch('/api/settings');
-        
+
         if (!response.ok) {
           console.warn('Settings API not available');
           return;
@@ -32,18 +32,18 @@ function MyApp({ Component, pageProps }) {
           if (data.data.facebookPixel?.enabled && data.data.facebookPixel?.id) {
             const pixelId = data.data.facebookPixel.id;
             console.log('Initializing Facebook Pixel:', pixelId);
-
-            // Initialize pixel
-            const initialized = await initFacebookPixel(pixelId);
             
-            if (initialized) {
-              setPixelLoaded(true);
-              // Track initial page view
+            // Initialize pixel (this is synchronous, not async)
+            initFacebookPixel(pixelId);
+            
+            // Mark pixel as loaded and track initial page view
+            setPixelLoaded(true);
+            
+            // Track initial page view after a short delay to ensure pixel is ready
+            setTimeout(() => {
               pageview();
               console.log('Facebook Pixel initialized successfully');
-            } else {
-              console.warn('Facebook Pixel initialization failed');
-            }
+            }, 100);
           }
         }
       } catch (error) {
