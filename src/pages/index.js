@@ -71,7 +71,7 @@ function Home() {
       }
 
       const response = await fetch(
-        `/api/products?page=${pageNum}&limit=20&search=`,
+        `/api/products?page=${pageNum}&limit=35&search=`,
         {
           method: 'GET',
           headers,
