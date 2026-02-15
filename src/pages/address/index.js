@@ -359,8 +359,8 @@ const Address = () => {
                             </svg>
                             <span className="header__cart-count header__cart-count--floating bubble-count">
                               {typeof localStorage !== "undefined" &&
-                                localStorage.getItem("d1") &&
-                                JSON.parse(localStorage.getItem("d1")).length}
+                                localStorage.getItem("cart") &&
+                                JSON.parse(localStorage.getItem("cart")).length}
                             </span>
                           </a>
                         </div>

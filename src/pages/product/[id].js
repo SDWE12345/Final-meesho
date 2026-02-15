@@ -14,14 +14,17 @@ const getSizeLabel = (sizeNum) => {
 };
 
 const getCartData = () => {
-  if (typeof window === 'undefined') return [];
+  if (typeof window === "undefined") return [];
+
+  const data = localStorage.getItem("cart");
+
   try {
-    const data = localStorage.getItem("cart");
     return data ? JSON.parse(data) : [];
   } catch (error) {
     return [];
   }
 };
+
 
 const saveCartData = (data) => {
   if (typeof window === 'undefined') return;
@@ -298,34 +301,34 @@ function ProductDetails() {
   }, [router.query.id]);
 
   const addToCart = (buyNow = false) => {
-    const existingProducts = getCartData();
-    const productId = data1._id || data1.id;
+    if (!data1) return;
+
+    const storedData = getCartData();
+    const existingProducts = Array.isArray(storedData) ? storedData : [];
+
+    const productId = data1?._id || data1?.id;
+    if (!productId) return;
+
     const existingProductIndex = existingProducts.findIndex(
-      product => (product._id || product.id) === productId
+      product => (product?._id || product?.id) === productId
     );
 
     if (existingProductIndex !== -1) {
-      existingProducts[existingProductIndex].quantity += 1;
+      existingProducts[existingProductIndex].quantity =
+        (existingProducts[existingProductIndex].quantity || 0) + 1;
     } else {
-      const newProduct = {
+      existingProducts.push({
         ...data1,
         quantity: 1,
-        size: getSizeLabel(size),
-        price: data1.sellingPrice || data1.price,
-        cancelprice: data1.mrp || data1.cancelprice,
-        image: data1.mainImage || data1.image || (data1.images && data1.images[0]),
-      };
-      existingProducts.push(newProduct);
+      });
     }
 
     saveCartData(existingProducts);
     setData133(existingProducts);
-    window.dispatchEvent(new Event('storage'));
-
     if (buyNow) {
-      router.push("/cart");
+      router?.push?.("/cart");
     } else {
-      setmySidenavopen(false);
+      setmySidenavopen?.(false);
     }
   };
 
@@ -347,7 +350,7 @@ function ProductDetails() {
         <Link href="/">
           <span className="go-home-btn">Go Home</span>
         </Link>
-        
+
         <style jsx>{`
           .error-container {
             display: flex;
@@ -440,7 +443,7 @@ function ProductDetails() {
         {/* Product Info */}
         <div className="product-info">
           <h1 className="product-title m-0">{data1.title2 || data1.title}</h1>
-          
+
           <div className="price-section">
             <div className="price-row">
               <span className="current-price">₹{data1.sellingPrice || data1.price}</span>
@@ -477,8 +480,8 @@ function ProductDetails() {
           <div className="product-details">
             <h3 className="details-title">Product Details</h3>
             {data1.features && (
-              <div className="features-section" > 
-            {data1.features && <div dangerouslySetInnerHTML={{ __html: data1.features }} />}
+              <div className="features-section" >
+                {data1.features && <div dangerouslySetInnerHTML={{ __html: data1.features }} />}
               </div>
             )}
             {data1.highlight && <div dangerouslySetInnerHTML={{ __html: data1.highlight }} />}

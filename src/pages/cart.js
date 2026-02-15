@@ -30,34 +30,34 @@ function Cart() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const totalMrp = data133.reduce(
-    (sum, product) => sum + parseInt(product.price * product.quantity),
+    (sum, product) => sum + parseInt(product.sellingPrice * product.quantity),
     0
   );
 
 
   const removeItem = (id) => {
-    const updated = JSON.parse(localStorage.getItem("d1") || "[]").filter(
+    const updated = JSON.parse(localStorage.getItem("cart") || "[]").filter(
       (el) => el.id !== id
     );
-    localStorage.setItem("d1", JSON.stringify(updated));
+    localStorage.setItem("cart", JSON.stringify(updated));
     setdata133(updated);
   };
 
   const decreaseQty = (id) => {
-    const updated = JSON.parse(localStorage.getItem("d1") || "[]").map((el) =>
+    const updated = JSON.parse(localStorage.getItem("cart") || "[]").map((el) =>
       el.id === id && el.quantity > 1
         ? { ...el, quantity: el.quantity - 1 }
         : el
     );
-    localStorage.setItem("d1", JSON.stringify(updated));
+    localStorage.setItem("cart", JSON.stringify(updated));
     setdata133(updated);
   };
 
   const increaseQty = (id) => {
-    const updated = JSON.parse(localStorage.getItem("d1") || "[]").map((el) =>
+    const updated = JSON.parse(localStorage.getItem("cart") || "[]").map((el) =>
       el.id === id ? { ...el, quantity: el.quantity + 1 } : el
     );
-    localStorage.setItem("d1", JSON.stringify(updated));
+    localStorage.setItem("cart", JSON.stringify(updated));
     setdata133(updated);
   };
 
@@ -230,8 +230,8 @@ function Cart() {
                             </svg>
                             <span className="header__cart-count header__cart-count--floating bubble-count">
                               {typeof localStorage !== "undefined" &&
-                                localStorage.getItem("d1") &&
-                                JSON.parse(localStorage.getItem("d1")).length}
+                                localStorage.getItem("cart") &&
+                                JSON.parse(localStorage.getItem("cart")).length}
                             </span>
                           </a>
                         </div>
@@ -324,7 +324,7 @@ function Cart() {
                                     className="cart-product cart-product-index-0"
                                   >
                                     <div className="cart-product-img">
-                                      <img src={el.image} alt="" />
+                                      <img src={el.mainImage} alt="" />
                                     </div>
                                     <div className="cart-product-details">
                                       <div className="cart-product-title">
@@ -339,11 +339,11 @@ function Cart() {
                                       </div>
                                       <div className="cart-product-pricing">
                                         <p className="cart-product-price">
-                                          ₹{el.price}
+                                          ₹{el.sellingPrice}
                                         </p>
                                         &nbsp;
                                         <span className="cart-product-mrp">
-                                          ₹{el.cancelprice}
+                                          ₹{el.mrp}
                                         </span>
                                       </div>
                                       <div className="cart-product-description">
@@ -499,10 +499,10 @@ function Cart() {
                             />
                           </div>
                           <div className="cart-product-pricing">
-                            <p className="cart-product-price">₹{el.price}</p>
+                            <p className="cart-product-price">₹{el.sellingPrice}</p>
                             &nbsp;
                             <span className="cart-product-mrp">
-                              ₹{el.cancelprice}
+                              ₹{el.mrp}
                             </span>
                           </div>
                           <div className="cart-product-description">

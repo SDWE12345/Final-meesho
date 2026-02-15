@@ -8,7 +8,7 @@ function Card({ item, index }) {
     <Link
       href={`/product-details/${item.id}`}
       onClick={() => {
-        localStorage.setItem("d1", JSON.stringify(item));
+        localStorage.setItem("cart", JSON.stringify(item));
       }}
       key={index}
       className="Cs7ycL TcKeCe  col-6"

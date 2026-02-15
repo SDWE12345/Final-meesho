@@ -425,7 +425,7 @@ function Home() {
               return (
                 <Link
                   onClick={() => {
-                    localStorage.setItem("d1", JSON.stringify(el))
+                    localStorage.setItem("cart", JSON.stringify(el))
                   }}
                   key={`${productId}-${index}`}
                   href={`/product/${productId}`}

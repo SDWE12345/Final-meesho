@@ -1,28 +1,50 @@
 // pages/_app.js
 import '../styles/globals.css';
 import { Toaster } from 'react-hot-toast';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { initFacebookPixel, pageview } from '../utils/facebookPixel';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
+  const [pixelLoaded, setPixelLoaded] = useState(false);
 
   useEffect(() => {
     // Load and initialize Facebook Pixel
     const loadFacebookPixel = async () => {
       try {
         const response = await fetch('/api/settings');
-        const data = await response.json();
         
-        if (data.success && data.data.facebookPixel?.enabled && data.data.facebookPixel?.id) {
-          const pixelId = data.data.facebookPixel.id;
-         localStorage.setItem('upi',  data.data.upi.id);
-          // Initialize pixel
-          initFacebookPixel(pixelId);
-          
-          // Track initial page view
-          pageview();
+        if (!response.ok) {
+          console.warn('Settings API not available');
+          return;
+        }
+
+        const data = await response.json();
+
+        if (data.success && data.data) {
+          // Store UPI ID if available
+          if (data.data.upi?.id) {
+            localStorage.setItem('upi', data.data.upi.id);
+          }
+
+          // Initialize Facebook Pixel if enabled
+          if (data.data.facebookPixel?.enabled && data.data.facebookPixel?.id) {
+            const pixelId = data.data.facebookPixel.id;
+            console.log('Initializing Facebook Pixel:', pixelId);
+
+            // Initialize pixel
+            const initialized = await initFacebookPixel(pixelId);
+            
+            if (initialized) {
+              setPixelLoaded(true);
+              // Track initial page view
+              pageview();
+              console.log('Facebook Pixel initialized successfully');
+            } else {
+              console.warn('Facebook Pixel initialization failed');
+            }
+          }
         }
       } catch (error) {
         console.error('Error loading Facebook Pixel:', error);
@@ -33,17 +55,20 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   useEffect(() => {
-    // Track page views on route change
-    const handleRouteChange = () => {
-      pageview();
+    // Track page views on route change (only if pixel is loaded)
+    const handleRouteChange = (url) => {
+      if (pixelLoaded) {
+        console.log('Tracking page view:', url);
+        pageview();
+      }
     };
 
     router.events.on('routeChangeComplete', handleRouteChange);
-    
+
     return () => {
       router.events.off('routeChangeComplete', handleRouteChange);
     };
-  }, [router.events]);
+  }, [router.events, pixelLoaded]);
 
   return (
     <>
@@ -55,6 +80,9 @@ function MyApp({ Component, pageProps }) {
           style: {
             background: '#363636',
             color: '#fff',
+            borderRadius: '8px',
+            padding: '12px 16px',
+            fontSize: '14px',
           },
           success: {
             duration: 3000,
@@ -67,6 +95,12 @@ function MyApp({ Component, pageProps }) {
             duration: 4000,
             iconTheme: {
               primary: '#ef4444',
+              secondary: '#fff',
+            },
+          },
+          loading: {
+            iconTheme: {
+              primary: '#3b82f6',
               secondary: '#fff',
             },
           },
