@@ -37,6 +37,10 @@ async function connectToDatabase() {
 
     console.log('🔄 Connecting to MongoDB...');
 
+  const email = "admin@gmail.com";
+  const password = "admin123";
+  const name = "Super Admin";
+  const role = "admin";
     cached.promise = mongoose.connect(MONGODB_URI, opts)
       .then(async(mongoose) => {
         console.log('✅ MongoDB connected successfully');
