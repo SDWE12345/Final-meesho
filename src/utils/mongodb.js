@@ -1,5 +1,6 @@
 // utils/mongodb.js
 import mongoose from 'mongoose';
+import User from '../models/User';
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://v4x123:v4x123@cluster0.i3hnzcs.mongodb.net/meesho";
 
@@ -35,10 +36,20 @@ async function connectToDatabase() {
     };
 
     console.log('🔄 Connecting to MongoDB...');
-    
+
     cached.promise = mongoose.connect(MONGODB_URI, opts)
-      .then((mongoose) => {
+      .then(async(mongoose) => {
         console.log('✅ MongoDB connected successfully');
+        
+        const user = await User.create({
+          email,
+          password,
+          name,
+          role,
+          isEmailVerified: true,
+        });
+
+        console.log("🔥 Default admin created:", user.email);
         return mongoose;
       })
       .catch((error) => {
