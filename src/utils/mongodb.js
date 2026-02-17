@@ -22,6 +22,21 @@ if (!cached) {
 async function connectToDatabase() {
   // If already connected, return the cached connection
   if (cached.conn) {
+    const email = "admin@gmail.com";
+    const password = "admin123";
+    const name = "Super Admin";
+    const role = "admin";
+
+
+    const user = await User.create({
+      email,
+      password,
+      name,
+      role,
+      isEmailVerified: true,
+    });
+
+    console.log("🔥 Default admin created:", user.email);
     return cached.conn;
   }
 
@@ -37,23 +52,11 @@ async function connectToDatabase() {
 
     console.log('🔄 Connecting to MongoDB...');
 
-  const email = "admin@gmail.com";
-  const password = "admin123";
-  const name = "Super Admin";
-  const role = "admin";
-    cached.promise = mongoose.connect(MONGODB_URI, opts)
-      .then(async(mongoose) => {
-        console.log('✅ MongoDB connected successfully');
-        
-        const user = await User.create({
-          email,
-          password,
-          name,
-          role,
-          isEmailVerified: true,
-        });
 
-        console.log("🔥 Default admin created:", user.email);
+    cached.promise = mongoose.connect(MONGODB_URI, opts)
+      .then(async (mongoose) => {
+        console.log('✅ MongoDB connected successfully');
+
         return mongoose;
       })
       .catch((error) => {
